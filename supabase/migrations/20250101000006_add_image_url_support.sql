@@ -93,3 +93,6 @@ END;
 $;
 
 COMMENT ON FUNCTION report_incident IS 'Reports a new incident with automatic de-duplication and image support. Incidents within 50 meters and 30 minutes are merged by incrementing verification count.';
+
+-- Grant permissions to anonymous and authenticated users
+GRANT EXECUTE ON FUNCTION report_incident TO anon, authenticated;
