@@ -48,36 +48,46 @@ export async function reportIncident(input: ReportIncidentInput): Promise<string
       console.log('[incidents] Image uploaded:', imageUrl);
     }
 
-    // Step 2: Call report_incident RPC
-    console.log('[incidents] Creating incident via RPC...', {
+    // Step 2: Generate incident ID
+    const incidentId = `INC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+
+    // Step 3: Insert directly into incidents table (bypass RPC)
+    console.log('[incidents] Creating incident via direct insert...', {
+      id: incidentId,
       type: input.type,
       severity: input.severity,
       lat: input.lat,
       lng: input.lng,
     });
 
-    const { data, error } = await supabase.rpc('report_incident' as any, {
-      p_type: input.type,
-      p_severity: input.severity,
-      p_description: input.description,
-      p_lat: input.lat,
-      p_lng: input.lng,
-      p_address: input.address || null,
-      p_reported_by_name: 'Anonymous',
-      p_image_url: imageUrl,  // Pass the uploaded image URL
-    } as any);
+    const { data, error } = await supabase
+      .from('incidents')
+      .insert({
+        id: incidentId,
+        type: input.type,
+        severity: input.severity,
+        description: input.description,
+        lat: input.lat,
+        lng: input.lng,
+        address: input.address || null,
+        reported_by_name: 'Anonymous',
+        reported_at: new Date().toISOString(),
+        verification_count: 1,
+        image_url: imageUrl,
+        status: 'pending',
+      })
+      .select()
+      .single();
 
     if (error) {
-      console.error('[incidents] RPC error:', error);
+      console.error('[incidents] Insert error:', error);
       throw new Error(`Failed to report incident: ${error.message}`);
     }
 
-    if (data === null || data === undefined) {
-      throw new Error('Failed to report incident: No ID returned');
+    if (!data) {
+      throw new Error('Failed to report incident: No data returned');
     }
 
-    // The function now returns a simple TEXT incident ID
-    const incidentId = data as string;
     console.log('[incidents] Incident created, ID:', incidentId);
     return incidentId;
   } catch (error) {
