@@ -53,6 +53,11 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       eventsPerSecond: 10,
     },
   },
+  global: {
+    headers: {
+      'apikey': supabaseAnonKey,
+    },
+  },
 });
 
 /**
