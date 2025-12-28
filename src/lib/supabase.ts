@@ -19,6 +19,15 @@ import type { Database } from '@/types/database';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Debug logging (remove in production)
+console.log('[Supabase] Environment check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlPrefix: supabaseUrl?.substring(0, 30),
+  keyPrefix: supabaseAnonKey?.substring(0, 20),
+  keyLength: supabaseAnonKey?.length,
+});
+
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
     'Missing Supabase environment variables. Please check your .env file.'
