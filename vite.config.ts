@@ -13,6 +13,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     }
   },
+  define: {
+    // Ensure environment variables are available at runtime
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(process.env.VITE_SUPABASE_ANON_KEY),
+    'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(process.env.VITE_GEMINI_API_KEY),
+  },
   test: {
     globals: true,
     environment: 'jsdom',
