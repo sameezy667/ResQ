@@ -23,6 +23,13 @@
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
 
+  /* Desktop zoom: 70% for screens wider than 1024px */
+  @media (min-width: 1024px) {
+    body {
+      zoom: 0.7;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
   }
