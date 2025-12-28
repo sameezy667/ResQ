@@ -16,6 +16,9 @@ dist-ssr
 .env
 .env.local
 
+# Exclude SIH folder
+SIH/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
